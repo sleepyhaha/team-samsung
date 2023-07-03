@@ -10,11 +10,39 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
     <script src="https://kit.fontawesome.com/3a2cecfb2f.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
-
+    <nav class="flex justify-around items-center text-2xl p-5 ">
+        <h1><a href="highscores.html">Highscores</a></h1>
+        <h1 id="life">Life: <span id="hearts"></span></h1>
+    </nav>
+    <div>
+        <div class="start" id="start-text">
+            <h1>PictoHang</h1>
+            <p> Try to guess the word related to the image! Keep in mind that guessing the incorrect letter will
+                penalize you!</p>
+            <button id="start-btn">Start Game</button>
+        </div>
+    </div>
+    <div id="start-container">
+        <div id="quiz-container" style="display: none;">
+            <h2 id="image"></h2>
+            <div id="word"></div>
+            <p id="feedback"></p>
+        </div>
+    </div>
+    <div id="end-container" style="display: none;">
+        <h2>Congratulations!</h2>
+        <p>Your score is <span id="score"></span>.</p>
+        <form id="score-form">
+            <label for="initials">Enter your initials:</label>
+            <input type="text" id="initials" maxlength="3">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
     <script src="assets/js/script.js"></script>
 </body>
 
