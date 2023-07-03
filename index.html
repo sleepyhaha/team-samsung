@@ -15,16 +15,24 @@
 </head>
 
 <body>
-    <nav class="flex justify-around items-center text-2xl p-5 ">
-        <h1><a href="highscores.html">Highscores</a></h1>
-        <h1 id="life">Life: <span id="hearts"></span></h1>
+    <nav class="px-5">
+        <div class="flex justify-between items-center text-2xl p-5 font-semibold">
+            <h1><a href="highscores.html">Highscores</a></h1>
+            <h1 id="life">Life: <span id="hearts"></span></h1>
+        </div>
     </nav>
     <div>
-        <div class="start" id="start-text">
-            <h1>PictoHang</h1>
-            <p> Try to guess the word related to the image! Keep in mind that guessing the incorrect letter will
+        <div class="start flex text-center justify-center flex-col flex-wrap mt-60 leading-normal" id="start-text">
+            <h1 class="text-3xl font-bold mb-5">PictoHang</h1>
+            <p class="text-xl"> Try to guess the word related to the image!</p>
+            <p class="text-xl">Keep in mind that guessing the incorrect
+                letter will
                 penalize you!</p>
-            <button id="start-btn">Start Game</button>
+        </div>
+        <div class="flex justify-center">
+            <button id="start-btn"
+                class="mt-10 text-2xl font-semibold bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Start
+                Game</button>
         </div>
     </div>
     <div id="start-container">
