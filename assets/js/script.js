@@ -1,3 +1,4 @@
+
 var wordBlank = document.querySelector(".word-blanks");
 var wordImage = document.querySelector(".word-image");
 var win = document.querySelector(".win");
@@ -131,3 +132,19 @@ function renderBlanks(word) {
 
   resetButton.addEventListener("click", resetGame);
   
+
+let submitButton = document.querySelector("#submit-btn");
+let playerName = document.querySelector("#initials");
+let playerHighScore = document.querySelector("#score");
+
+function saveHighScores() {
+  let highScoreSave = {
+    playerNameSave: playerName.value,
+    playerHighScoreSave: playerHighScore.value,
+  };
+
+  localStorage.setItem("nameScore", json.stringify(highScoreSave));
+}
+
+submitButton.addEventListener("submit", saveHighScores);
+
