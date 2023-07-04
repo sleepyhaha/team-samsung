@@ -33,7 +33,7 @@
             <h1 id="life">Life: <span id="hearts"></span></h1>
         </div>
     </nav>
-    <div>
+    <div class="">
         <div class="start flex text-center justify-center flex-col flex-wrap mt-60 leading-normal" id="start-text">
             <h1 class="text-3xl font-bold mb-5">PictoHang</h1>
             <p class="text-xl"> Try to guess the word related to the image!</p>
@@ -47,21 +47,28 @@
                 Game</button>
         </div>
     </div>
-    <div id="start-container">
-        <div id="quiz-container" style="display: none;">
-            <h2 id="image"></h2>
-            <div id="word"></div>
-            <p id="feedback"></p>
+    <div class="hidden">
+        <div class="flex justify-center flex-col items-center mt-48">
+            <div>
+                <img class="h-auto max-w-xl rounded-lg" src="" alt="img">
+            </div>
+            <p id="word" class="mt-10 text-3xl"></p>
+            <p id="feedback" class="mt-10 text-2xl"></p>
         </div>
     </div>
-    <div id="end-container" style="display: none;">
-        <h2>Congratulations!</h2>
-        <p>Your score is <span id="score"></span>.</p>
-        <form id="score-form">
-            <label for="initials">Enter your initials:</label>
-            <input type="text" id="initials" maxlength="3">
-            <button type="submit">Submit</button>
-        </form>
+    <div class="hidden">
+        <div class="flex justify-center flex-col items-center mt-60">
+            <h2 class="text-3xl font-bold mb-5">You scored:</h2>
+            <p class="text-3xl mb-10"></p>
+            <form id="score-form">
+                <label for="Name">Enter your Name:</label>
+                <input type="text" id="name" maxlength="15"
+                    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded text-gray-700 p-1"
+                    placeholder="First Name">
+                <button type="submit"
+                    class="flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded">Submit</button>
+            </form>
+        </div>
     </div>
     <script src="assets/js/script.js"></script>
 </body>
