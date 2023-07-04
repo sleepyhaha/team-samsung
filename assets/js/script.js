@@ -1,9 +1,11 @@
 
-var wordBlank = document.querySelector(".word-blanks");
-var wordImage = document.querySelector(".word-image");
-var win = document.querySelector(".win");
-var lose = document.querySelector(".lose");
-var startButton = document.querySelector(".start-button");
+var wordBlank = document.querySelector(".word");
+var wordImage = document.querySelector(".image");
+var win = document.querySelector(".score");
+var hIcon = document.querySelector(".life");
+var loseWord = document.querySelector(".feedback");
+var startButton = document.querySelector(".start-btn");
+var startText = document.querySelector(".start-text");
 
 var chosenWord = "";
 var numBlanks = 0;
@@ -17,19 +19,25 @@ var blanksLetters = [];
 
 resetButton.setAttribute("class", "hidden");
 startButton.classList.remove("hidden");
+startText.classList.remove("hidden");
 
-const apiKey = 'TPdUCeG3WR59NfeXrgX3haDvC3OdEfVfp01tMl6bLaG8Fzp6YxWlk5Eh';
+const apiKey1 = '08SiQc4/9b0z0C2DlECDGQ==3n1XmkHtwwn8vdYQ';
+const apiKey2 = 'TPdUCeG3WR59NfeXrgX3haDvC3OdEfVfp01tMl6bLaG8Fzp6YxWlk5Eh';
 const loseTotal = 10;
 
 function game() {
-    startButton.setAttribute("class", "hidden");
+  renderHearts();  
+  startButton.setAttribute("class", "hidden");
+  startText.setAttribute("class", "hidden");
     ranWord = [];
-    var apiUrl1 = 'https://random-word-api.vercel.app/api?words=1';
+    var apiUrl1 = 'https://api.api-ninjas.com/v1/randomword';
 
-    fetch(apiUrl1)
-    .then(function (response) {
-      if (response.ok) {
-        response.json().then(function (data) {
+    $.ajax({
+      method: 'GET',
+      url: apiUrl1,
+      headers: { 'X-Api-Key': apiKey1},
+      contentType: 'application/json',
+      success: function(result) {
             ranWord = data[0];
             console.log(ranWord);
             renderBlanks(ranWord);
@@ -38,7 +46,7 @@ function game() {
 
             fetch(apiUrl2, {
               headers: {
-                Authorization: apiKey
+                Authorization: apiKey2
               }
             })
             .then(function (response) {
@@ -47,6 +55,7 @@ function game() {
                     wordImage.src = data.photos.src.landscape;
                     console.log(wordImage);
                     document.addEventListener("keydown", function(event) {
+                      loseWord.innerHTML = '';
                       var key = event.key.toLowerCase();
                       var alphabetNumericCharacters = "abcdefghijklmnopqrstuvwxyz0123456789 ".split("");
                       if (alphabetNumericCharacters.includes(key)) {
@@ -72,15 +81,22 @@ function game() {
                 alert('Unable to connect');
             });
 
-        })
-        } else {
-            alert('Error: ' + response.statusText);
-        }
-    })
-        .catch(function (error) {
-        alert('Unable to connect');
-    });
-};
+  },
+  error: function ajaxError(jqXHR) {
+      console.error('Error: ', jqXHR.responseText);
+  }
+  });
+}
+
+function renderHearts() {
+  for (var i=0; i < 10; i++) {
+    let hearts = document.createElement("i");
+    hearts.setAttribute("id", "hearts");
+    hearts.setAttribute("class", "fa-solid fa-heart");
+    hearts.style.color = "#FF0000";
+    hIcon.appendChild(hearts);
+  }
+}
 
 function renderBlanks(word) {
     chosenWord = word[Math.floor(Math.random() * word.length)];
@@ -93,44 +109,47 @@ function renderBlanks(word) {
     wordBlank.textContent = blanksLetters.join(" ");
   }
   
-  function checkLetters(letter) {
-    var letterInWord = false;
-    for (var i = 0; i < numBlanks; i++) {
-      if (chosenWord[i] === letter) {
-        letterInWord = true;
-      } else if (chosenWord[i] != letter){
-        loseCounter ++;
-        lose.textContent = loseCounter;
+function checkLetters(letter) {
+  var letterInWord = false;
+  for (var i = 0; i < numBlanks; i++) {
+    if (chosenWord[i] === letter) {
+      letterInWord = true;
+    } else if (chosenWord[i] != letter){
+      loseCounter ++;
+      let j = 9-i;
+      let hearts = document.querySelectorAll("#hearts");
+      hearts[j].setAttribute("class", "fa-solid fa-heart-broken");
+      loseWord.textContent = 'Incorrect, Try again!';
+    }
+  }
+   if (letterInWord) {
+    for (var j = 0; j < numBlanks; j++) {
+      if (chosenWord[j] === letter) {
+        blanksLetters[j] = letter;
       }
     }
-    if (letterInWord) {
-      for (var j = 0; j < numBlanks; j++) {
-        if (chosenWord[j] === letter) {
-          blanksLetters[j] = letter;
-        }
-      }
-      wordBlank.textContent = blanksLetters.join(" ");
-    }
+    wordBlank.textContent = blanksLetters.join(" ");
   }
+}
 
-  function checkWin() {
-    if (chosenWord === blanksLetters.join("")) {
-      isWin = true;
-    }
+function checkWin() {
+  if (chosenWord === blanksLetters.join("")) {
+    isWin = true;
   }
+}
 
-  function setWins() {
-    win.textContent = winCounter;
-    localStorage.setItem("winCount", winCounter);
-  }
+function setWins() {
+  win.textContent = winCounter;
+  playerHighScore.value = winCounter;
+}
 
-  startButton.addEventListener("click", game);
+startButton.addEventListener("click", game);
 
-  function resetGame() {
-    window.location.reload();
-  }
+function resetGame() {
+  window.location.reload();
+}
 
-  resetButton.addEventListener("click", resetGame);
+resetButton.addEventListener("click", resetGame);
   
 
 let submitButton = document.querySelector("#submit-btn");
