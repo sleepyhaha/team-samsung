@@ -1,11 +1,12 @@
 
-var wordBlank = document.querySelector(".word");
-var wordImage = document.querySelector(".image");
-var win = document.querySelector(".score");
-var hIcon = document.querySelector(".life");
-var loseWord = document.querySelector(".feedback");
-var startButton = document.querySelector(".start-btn");
-var startText = document.querySelector(".start-text");
+var wordBlank = document.querySelector("#word");
+var wordImage = document.querySelector("#image");
+var win = document.querySelector("#score");
+var hIcon = document.querySelector("#life");
+var loseWord = document.querySelector("#feedback");
+var startButton = document.querySelector("#start-btn");
+var startText = document.querySelector("#start-text");
+var container = document.querySelector('#quiz-container');
 
 var chosenWord = "";
 var numBlanks = 0;
@@ -17,9 +18,8 @@ var ranWord = [];
 var lettersInChosenWord = [];
 var blanksLetters = [];
 
-resetButton.setAttribute("class", "hidden");
-startButton.classList.remove("hidden");
-startText.classList.remove("hidden");
+//startButton.classList.remove("hidden");
+//startText.classList.remove("hidden");
 
 const apiKey1 = '08SiQc4/9b0z0C2DlECDGQ==3n1XmkHtwwn8vdYQ';
 const apiKey2 = 'TPdUCeG3WR59NfeXrgX3haDvC3OdEfVfp01tMl6bLaG8Fzp6YxWlk5Eh';
@@ -29,6 +29,7 @@ function game() {
   renderHearts();  
   startButton.setAttribute("class", "hidden");
   startText.setAttribute("class", "hidden");
+  container.style.removeProperty("display");
     ranWord = [];
     var apiUrl1 = 'https://api.api-ninjas.com/v1/randomword';
 
@@ -52,7 +53,8 @@ function game() {
             .then(function (response) {
               if (response.ok) {
                 response.json().then(function (data) {
-                    wordImage.setAttribute("src", data.photos.src.landscape);
+                  console.log(data);
+                    wordImage.setAttribute("src", data.photos[0].src.landscape);
                     console.log(wordImage);
                     document.addEventListener("keydown", function(event) {
                       loseWord.innerHTML = '';
@@ -68,7 +70,6 @@ function game() {
                           game();
                         } else if (loseCounter == loseTotal) {
                           wordBlank.textContent = "GAME OVER";
-                          resetButton.classList.remove("hidden");
                         }
                       }
                     });        
@@ -145,11 +146,6 @@ function setWins() {
 
 startButton.addEventListener("click", game);
 
-function resetGame() {
-  window.location.reload();
-}
-
-resetButton.addEventListener("click", resetGame);
   
 
 let submitButton = document.querySelector("#submit-btn");
