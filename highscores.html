@@ -9,23 +9,44 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        customgrey: '#333',
+                        customwhite: '#f1f1f1',
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
-    <div class="highscore-title">
-        <h1>High Scores</h1>
+    <div class="flex text-center justify-center mt-60">
+        <h1 class="text-4xl font-bold">High Scores</h1>
     </div>
-    <div class="highscore-container">
-        <ol class="highscore-list">
-
-        </ol>
+    <div class="flex text-center justify-center mt-5">
+        <ul id="scoreboard" class="p-5 rounded-xl w-80 font-semibold shadow-xl bg-white text-xl">
+            <li class="flex justify-between"><span>Sam:</span> <span>10</span></li>
+            <li class="flex justify-between"><span>Sam:</span> <span>10</span></li>
+            <li class="flex justify-between"><span>Sam:</span> <span>10</span></li>
+            <li class="flex justify-between"><span>Sam:</span> <span>10</span></li>
+            <li class="flex justify-between"><span>Sam:</span> <span>10</span></li>
+            <li class="flex justify-between"><span>Sam:</span> <span>10</span></li>
+        </ul>
     </div>
-    <button>
-        Play Again
-    </button>
-
-
+    <div class="flex text-center justify-center mt-20">
+        <button id="back-btn"
+            class="text-xl font-semibold bg-blue-500 hover:bg-blue-700 text-customwhite font-bold py-2 px-4 rounded-full mx-5">Play
+            Again</button>
+        <button id="clear-btn"
+            class="text-xl font-semibold bg-blue-500 hover:bg-blue-700 text-customwhite font-bold py-2 px-4 rounded-full mx-5">Clear
+            Scores</button>
+    </div>
     <script src="assets/js/highscores.js"></script>
 </body>
 
