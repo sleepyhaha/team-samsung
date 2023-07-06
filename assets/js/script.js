@@ -38,7 +38,7 @@ function game() {
       headers: { 'X-Api-Key': apiKey1},
       contentType: 'application/json',
       success: function(result) {
-            ranWord = data[0];
+            ranWord = result.word;
             console.log(ranWord);
             renderBlanks(ranWord);
 
@@ -52,7 +52,7 @@ function game() {
             .then(function (response) {
               if (response.ok) {
                 response.json().then(function (data) {
-                    wordImage.src = data.photos.src.landscape;
+                    wordImage.setAttribute("src", data.photos.src.landscape);
                     console.log(wordImage);
                     document.addEventListener("keydown", function(event) {
                       loseWord.innerHTML = '';
