@@ -1,95 +1,116 @@
 
-var wordBlank = document.querySelector("#word");
-var wordImage = document.querySelector("#image");
-var win = document.querySelector("#score");
-var hIcon = document.querySelector("#life");
-var loseWord = document.querySelector("#feedback");
-var startButton = document.querySelector("#start-btn");
-var startText = document.querySelector("#start-text");
-var container = document.querySelector('#quiz-container');
+let wordBlank = document.querySelector("#word");
+let wordImage = document.querySelector("#image");
+let hIcon = document.querySelector("#life");
+let loseWord = document.querySelector("#feedback");
+let startButton = document.querySelector("#start-btn");
+let startContainer = document.querySelector('#startText');
+let gameContainer = document.querySelector('#game');
+let endContainer = document.querySelector('#endGame');
+let submitButton = document.querySelector("#submit-btn");
+let playerName = document.querySelector("#initials");
+let playerHighScore = document.querySelector("#score");
 
-var chosenWord = "";
-var numBlanks = 0;
-var winCounter = 0;
-var loseCounter = 0;
-var isWin = false;
+let winCounter = 0;
+let loseHeart = 0;
+let blanksLetters = [];
+let wordChosen = "";
 
-var ranWord = [];
-var lettersInChosenWord = [];
-var blanksLetters = [];
-
-//startButton.classList.remove("hidden");
-//startText.classList.remove("hidden");
-
-const apiKey1 = '08SiQc4/9b0z0C2DlECDGQ==3n1XmkHtwwn8vdYQ';
-const apiKey2 = 'TPdUCeG3WR59NfeXrgX3haDvC3OdEfVfp01tMl6bLaG8Fzp6YxWlk5Eh';
+const apiUrl1 = 'https://random-word-api.herokuapp.com/word?number=1';
+const apiKey2 = '9bfc82b8092b4463a134c8f64e93c91a';
 const loseTotal = 10;
 
+
 function game() {
+  startContainer.setAttribute("class", "hidden");
+  gameContainer.classList.remove("hidden");
+  loseWord.innerHTML = "";
   renderHearts();  
-  startButton.setAttribute("class", "hidden");
-  startText.setAttribute("class", "hidden");
-  container.style.removeProperty("display");
-    ranWord = [];
-    var apiUrl1 = 'https://api.api-ninjas.com/v1/randomword';
+  fetchWord();
+  document.addEventListener("keyup", gameRules); 
+}
 
-    $.ajax({
-      method: 'GET',
-      url: apiUrl1,
-      headers: { 'X-Api-Key': apiKey1},
-      contentType: 'application/json',
-      success: function(result) {
-            ranWord = result.word;
-            console.log(ranWord);
-            renderBlanks(ranWord);
-
-            var apiUrl2 = 'https://api.pexels.com/v1/search?query=' + ranWord + '&per_page=1';
-
-            fetch(apiUrl2, {
-              headers: {
-                Authorization: apiKey2
-              }
-            })
-            .then(function (response) {
-              if (response.ok) {
-                response.json().then(function (data) {
-                  console.log(data);
-                    wordImage.setAttribute("src", data.photos[0].src.landscape);
-                    console.log(wordImage);
-                    document.addEventListener("keydown", function(event) {
-                      loseWord.innerHTML = '';
-                      var key = event.key.toLowerCase();
-                      var alphabetNumericCharacters = "abcdefghijklmnopqrstuvwxyz0123456789 ".split("");
-                      if (alphabetNumericCharacters.includes(key)) {
-                        var letterGuessed = event.key;
-                        checkLetters(letterGuessed);
-                        checkWin();
-                        if (isWin) {
-                          winCounter ++;
-                          setWins;
-                          game();
-                        } else if (loseCounter == loseTotal) {
-                          wordBlank.textContent = "GAME OVER";
-                        }
-                      }
-                    });        
-                })
-                } else {
-                    alert('Error: ' + response.statusText);
-                }
-            })
-                .catch(function (error) {
-                alert('Unable to connect');
-            });
-
-  },
-  error: function ajaxError(jqXHR) {
-      console.error('Error: ', jqXHR.responseText);
+function gameRules (event) {
+  let key = event.key.toLowerCase();
+  let alphabetNumericCharacters = "abcdefghijklmnopqrstuvwxyz0123456789 ".split("");
+  if (alphabetNumericCharacters.includes(key) && wordChosen != null) {
+    console.log(key);
+    let lettersArray = wordChosen.split("");
+    console.log(lettersArray);
+    if (lettersArray.includes(key)) {
+      for (var j = 0; j < lettersArray.length; j++) {
+        if (lettersArray[j] === key) {
+          blanksLetters[j] = key;
+        }
+      }
+      key = "";
+      wordBlank.textContent = blanksLetters.join(" ");
+    } else if (!lettersArray.includes(key)) {
+      loseHeart ++;
+      console.log(loseHeart);
+      let k = loseTotal-loseHeart;
+      console.log(k);
+      let hearts = document.querySelectorAll("#hearts");
+      hearts[k].setAttribute("class", "fa-solid fa-heart-broken");
+      loseWord.textContent = 'Incorrect, Try again!';
+      key = "";
+    }
+    console.log(blanksLetters);
+    console.log(winCounter);
+    console.log(loseHeart);
+    if (wordChosen === blanksLetters.join("")) {
+      console.log(blanksLetters.join(""));
+      document.removeEventListener("keyup", gameRules);
+      winCounter ++;
+      loseHeart = 0;
+      blanksLetters = [];
+      wordChosen = "";
+      game();
+    } else if (loseHeart === loseTotal) {
+      document.removeEventListener("keyup", gameRules);
+      gameContainer.setAttribute("class", "hidden");
+      endContainer.classList.remove("hidden"); 
+    }
   }
-  });
+}
+
+async function fetchWord () {
+  try {
+    const response = await fetch(apiUrl1);
+    const data = await response.json();
+    let ranWord = data[0];
+    fetchImage(ranWord);
+    renderBlanks(ranWord);
+    wordChosen = ranWord;
+    console.log(wordChosen);
+  } catch (error) {
+    alert('Unable to connect');   
+  }
+}
+
+async function fetchImage (word) {
+  try {
+    const searchTerm = word; // Use the randomly generated word as the search term
+    const response = await fetch(
+      `https://api.bing.microsoft.com/v7.0/images/search?q=${encodeURIComponent(
+        searchTerm
+      )}`,
+      {
+        headers: {
+          "Ocp-Apim-Subscription-Key": apiKey2,
+        },
+      }
+    );
+    const data = await response.json();
+    wordImage.setAttribute("src", data.value[0].contentUrl);
+    console.log(wordImage);
+  } catch (error) {
+    alert('Unable to connect');   
+  }
 }
 
 function renderHearts() {
+  hIcon.innerHTML = "";
   for (var i=0; i < 10; i++) {
     let hearts = document.createElement("i");
     hearts.setAttribute("id", "hearts");
@@ -100,66 +121,24 @@ function renderHearts() {
 }
 
 function renderBlanks(word) {
-    chosenWord = word[Math.floor(Math.random() * word.length)];
-    lettersInChosenWord = chosenWord.split("");
-    numBlanks = lettersInChosenWord.length;
-    blanksLetters = [];
-    for (var i = 0; i < numBlanks; i++) {
-      blanksLetters.push("_");
-    }
-    wordBlank.textContent = blanksLetters.join(" ");
-  }
-  
-function checkLetters(letter) {
-  var letterInWord = false;
+  let lettersInChosenWord = word.split("");
+  let numBlanks = lettersInChosenWord.length;
   for (var i = 0; i < numBlanks; i++) {
-    if (chosenWord[i] === letter) {
-      letterInWord = true;
-    } else if (chosenWord[i] != letter){
-      loseCounter ++;
-      let j = 9-i;
-      let hearts = document.querySelectorAll("#hearts");
-      hearts[j].setAttribute("class", "fa-solid fa-heart-broken");
-      loseWord.textContent = 'Incorrect, Try again!';
-    }
+    blanksLetters.push("_");
   }
-   if (letterInWord) {
-    for (var j = 0; j < numBlanks; j++) {
-      if (chosenWord[j] === letter) {
-        blanksLetters[j] = letter;
-      }
-    }
-    wordBlank.textContent = blanksLetters.join(" ");
-  }
+  wordBlank.textContent = blanksLetters.join(" ");
 }
-
-function checkWin() {
-  if (chosenWord === blanksLetters.join("")) {
-    isWin = true;
-  }
-}
-
-function setWins() {
-  win.textContent = winCounter;
-  playerHighScore.value = winCounter;
-}
-
-startButton.addEventListener("click", game);
-
-  
-
-let submitButton = document.querySelector("#submit-btn");
-let playerName = document.querySelector("#initials");
-let playerHighScore = document.querySelector("#score");
 
 function saveHighScores() {
   let highScoreSave = {
     playerNameSave: playerName.value,
     playerHighScoreSave: playerHighScore.value,
   };
-
+  highScoreSave.playerHighScoreSave = winCounter;
   localStorage.setItem("nameScore", json.stringify(highScoreSave));
 }
+
+startButton.addEventListener("click", game);
 
 submitButton.addEventListener("submit", saveHighScores);
 

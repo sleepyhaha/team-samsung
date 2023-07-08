@@ -33,7 +33,7 @@
             <h1 id="life">Life: <span id="hearts"></span></h1>
         </div>
     </nav>
-    <div class=""> <!-- Starting text -->
+    <div id="startText" class=""> <!-- Starting text -->
         <div class="start flex text-center justify-center flex-col flex-wrap mt-60 leading-normal" id="start-text">
             <h1 class="text-3xl font-bold mb-5">PictoHang</h1>
             <p class="text-xl"> Try to guess the word related to the image!</p>
@@ -56,16 +56,16 @@
             </label>
         </div>
     </div>
-    <div class="hidden"> <!-- Game -->
+    <div id="game" class="hidden"> <!-- Game -->
         <div class="flex justify-center flex-col items-center mt-48">
             <div>
-                <img class="h-auto max-w-xl rounded-lg" src="" alt="img">
+                <img id="image" class="h-auto max-w-xl rounded-lg" src="" alt="img">
             </div>
-            <p id="word" class="mt-10 text-3xl"></p>
+            <div id="word" class="mt-10 text-3xl"></div>
             <p id="feedback" class="mt-10 text-2xl"></p>
         </div>
     </div>
-    <div class="hidden"> <!-- End screen -->
+    <div id="endGame" class="hidden"> <!-- End screen -->
         <div class="flex justify-center flex-col items-center mt-60">
             <h2 class="text-3xl font-bold mb-5">You scored:</h2>
             <p class="text-3xl mb-10"></p>
@@ -74,7 +74,7 @@
                 <input type="text" id="name" maxlength="15"
                     class="bg-gray-200 appearance-none border-2 border-gray-200 rounded text-gray-700 p-1"
                     placeholder="First Name">
-                <button type="submit"
+                <button id="submit-btn" type="submit"
                     class="flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded">Submit</button>
             </form>
         </div>
