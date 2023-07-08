@@ -21,11 +21,14 @@ const apiKey2 = '9bfc82b8092b4463a134c8f64e93c91a';
 const loseTotal = 10;
 const errorMsg = 'Incorrect! Please try again.'
 
-
-function game() {
+function init() {
   startContainer.setAttribute("class", "hidden");
   gameContainer.classList.remove("hidden");
   renderHearts();  
+  game();
+}
+
+function game() {
   fetchWord();
   document.addEventListener("keyup", gameRules); 
 }
@@ -59,7 +62,7 @@ function gameRules (event) {
       console.log(blanksLetters.join(""));
       document.removeEventListener("keyup", gameRules);
       winCounter ++;
-      loseHeart = 0;
+      //loseHeart = 0;
       blanksLetters = [];
       wordChosen = "";
       game();
@@ -136,7 +139,7 @@ function saveHighScores() {
   localStorage.setItem("nameScore", json.stringify(highScoreSave));
 }
 
-startButton.addEventListener("click", game);
+startButton.addEventListener("click", init);
 
 submitButton.addEventListener("submit", saveHighScores);
 
