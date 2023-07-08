@@ -19,18 +19,19 @@ let wordChosen = "";
 const apiUrl1 = 'https://random-word-api.herokuapp.com/word?number=1';
 const apiKey2 = '9bfc82b8092b4463a134c8f64e93c91a';
 const loseTotal = 10;
+const errorMsg = 'Incorrect! Please try again.'
 
 
 function game() {
   startContainer.setAttribute("class", "hidden");
   gameContainer.classList.remove("hidden");
-  loseWord.innerHTML = "";
   renderHearts();  
   fetchWord();
   document.addEventListener("keyup", gameRules); 
 }
 
 function gameRules (event) {
+  loseWord.innerHTML = "";
   let key = event.key.toLowerCase();
   let alphabetNumericCharacters = "abcdefghijklmnopqrstuvwxyz0123456789 ".split("");
   if (alphabetNumericCharacters.includes(key) && wordChosen != null) {
@@ -43,17 +44,13 @@ function gameRules (event) {
           blanksLetters[j] = key;
         }
       }
-      key = "";
       wordBlank.textContent = blanksLetters.join(" ");
     } else if (!lettersArray.includes(key)) {
       loseHeart ++;
-      console.log(loseHeart);
       let k = loseTotal-loseHeart;
-      console.log(k);
       let hearts = document.querySelectorAll("#hearts");
       hearts[k].setAttribute("class", "fa-solid fa-heart-broken");
-      loseWord.textContent = 'Incorrect, Try again!';
-      key = "";
+      loseWord.textContent = errorMsg;
     }
     console.log(blanksLetters);
     console.log(winCounter);
@@ -111,7 +108,7 @@ async function fetchImage (word) {
 
 function renderHearts() {
   hIcon.innerHTML = "";
-  for (var i=0; i < 10; i++) {
+  for (var i=0; i < loseTotal; i++) {
     let hearts = document.createElement("i");
     hearts.setAttribute("id", "hearts");
     hearts.setAttribute("class", "fa-solid fa-heart");
@@ -135,6 +132,7 @@ function saveHighScores() {
     playerHighScoreSave: playerHighScore.value,
   };
   highScoreSave.playerHighScoreSave = winCounter;
+  console.log(highScoreSave.playerHighScoreSave);
   localStorage.setItem("nameScore", json.stringify(highScoreSave));
 }
 
