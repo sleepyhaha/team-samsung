@@ -1,7 +1,7 @@
 let wordBlank = document.querySelector("#word");
 let wordImage = document.querySelector("#image");
 let hIcon = document.querySelector("#life");
-let hintBtn = document.querySelector('#hint');
+let hintBtn = document.querySelector("#hint");
 let loseWord = document.querySelector("#feedback");
 let startButton = document.querySelector("#start-btn");
 let startContainer = document.querySelector("#startText");
@@ -86,8 +86,8 @@ function gameRules(event) {
       winCounter++;
       blanksLetters = [];
       wordChosen = "";
-      if (hintNum <3) {
-        hintNum ++; 
+      if (hintNum < 3) {
+        hintNum++;
       }
       setTimeout(game, 1000);
     } else if (loseHeart === loseTotal) {
@@ -177,7 +177,7 @@ function renderHearts() {
   }
 }
 
-function renderHints (total) {
+function renderHints(total) {
   let hints = document.querySelectorAll("#hint");
   for (var i = 0; i < total; i++) {
     hints[i].setAttribute("class", "fa-solid fa-circle");
