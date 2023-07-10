@@ -1,6 +1,7 @@
 let wordBlank = document.querySelector("#word");
 let wordImage = document.querySelector("#image");
 let hIcon = document.querySelector("#life");
+let hintBtn = document.querySelector('#hint');
 let loseWord = document.querySelector("#feedback");
 let startButton = document.querySelector("#start-btn");
 let startContainer = document.querySelector("#startText");
@@ -15,6 +16,7 @@ let winCounter = 0;
 let loseHeart = 0;
 let blanksLetters = [];
 let wordChosen = "";
+let hintNum = 1;
 
 const apiUrl1 =
   "https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=noun&excludePartOfSpeech=adjective&excludePartOfSpeech=given-name&minCorpusCount=120000&maxCorpusCount=-1&minDictionaryCount=3&maxDictionaryCount=-1&minLength=5&maxLength=12&api_key=x99v4shgrkxxd91g6q006nr6g774vt6rnwqwggt7ftc3dzq9n";
@@ -32,7 +34,6 @@ function init() {
 function game() {
   fetchWord();
 }
-
 
 function endGame() {
   gameContainer.setAttribute("class", "hidden");
@@ -84,13 +85,28 @@ function gameRules(event) {
       winCounter++;
       blanksLetters = [];
       wordChosen = "";
-      setTimeout(game, 2000);
+      if (hintNum <3) {
+        hintNum ++; 
+      }
+      setTimeout(game, 1000);
     } else if (loseHeart === loseTotal) {
       key = "";
       document.removeEventListener("keyup", gameRules);
       endGame();
     }
   }
+}
+
+function hint() {
+  let lettersArray = wordChosen.split("");
+  let randLetter = Math.floor(Math.random() * lettersArray.length);
+  for (var i = 0; i < lettersArray.length; i++) {
+    if (lettersArray[j] === randLetter) {
+      blanksLetters[j] = randLetter;
+    }
+  }
+  hintNum = hintNum - 1;
+  renderHints(hintNum);
 }
 
 async function fetchWord() {
@@ -121,6 +137,8 @@ async function fetchImage(word) {
     wordChosen = word;
     renderBlanks(wordChosen);
     document.addEventListener("keyup", gameRules);
+    hintBtn.addEventListener("click", hint);
+    console.log(fetchStatus);
     console.log(wordChosen);
     console.log(wordImage);
   } catch (error) {
@@ -136,6 +154,14 @@ function renderHearts() {
     hearts.setAttribute("class", "fa-solid fa-heart");
     hearts.style.color = "#FF0000";
     hIcon.appendChild(hearts);
+  }
+}
+
+function renderHints (total) {
+  let hints = document.querySelectorAll("#hint");
+  for (var i = 0; i < total; i++) {
+    hints[i].setAttribute("class", "fa-solid fa-circle");
+    hints[i].setAttribute("diabled", false);
   }
 }
 
