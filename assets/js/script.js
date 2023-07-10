@@ -16,7 +16,8 @@ let loseHeart = 0;
 let blanksLetters = [];
 let wordChosen = "";
 
-const apiUrl1 = "https://random-word-api.vercel.app/api?words=1";
+const apiUrl1 =
+  "https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=noun&excludePartOfSpeech=adjective&excludePartOfSpeech=given-name&minCorpusCount=120000&maxCorpusCount=-1&minDictionaryCount=3&maxDictionaryCount=-1&minLength=5&maxLength=12&api_key=x99v4shgrkxxd91g6q006nr6g774vt6rnwqwggt7ftc3dzq9n";
 const apiKey2 = "9bfc82b8092b4463a134c8f64e93c91a";
 const loseTotal = 10;
 const errorMsg = "Incorrect! Please try again.";
@@ -89,7 +90,7 @@ async function fetchWord() {
   try {
     const response = await fetch(apiUrl1);
     const data = await response.json();
-    let ranWord = data[0];
+    let ranWord = data.word;
     fetchImage(ranWord);
     renderBlanks(ranWord);
     wordChosen = ranWord;
@@ -163,5 +164,16 @@ function saveHighScores() {
   // Redirect to the high scores page
   window.location.href = "highscores.html";
 }
+
+const hardModeCheckbox = document.getElementById("hardmode");
+const image = document.getElementById("image");
+
+hardModeCheckbox.addEventListener("change", function () {
+  if (hardModeCheckbox.checked) {
+    image.classList.add("blur");
+  } else {
+    image.classList.remove("blur");
+  }
+});
 
 startButton.addEventListener("click", init);
