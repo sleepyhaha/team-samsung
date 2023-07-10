@@ -10,6 +10,8 @@ let submitButton = document.querySelector("#submit-btn");
 let playerName = document.querySelector("#name");
 let playerHighScore = document.querySelector("#score");
 let scoreForm = document.querySelector("#score-form");
+let loadingIcon = document.querySelector("#loading-icon");
+const loadingScreen = document.querySelector("#loading-screen");
 
 let winCounter = 0;
 let loseHeart = 0;
@@ -93,6 +95,9 @@ function gameRules(event) {
 
 async function fetchWord() {
   try {
+    gameContainer.classList.add("hidden"); // Hide the game container
+    loadingScreen.classList.remove("hidden"); // Show the loading screen
+
     const response = await fetch(apiUrl1);
     const data = await response.json();
     const word = data.word.toLowerCase(); // Convert the word to lowercase
@@ -116,14 +121,29 @@ async function fetchImage(word) {
       }
     );
     const data = await response.json();
-    wordImage.setAttribute("src", data.value[0].contentUrl);
+    const imageUrl = data.value[0].contentUrl;
+
+    // Preload the image
+    const preloadedImage = new Image();
+    preloadedImage.src = imageUrl;
+
+    loadingScreen.classList.remove("hidden"); // Show the loading screen
+
+    // Delay for 3 seconds before loading the image and word
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    wordImage.setAttribute("src", imageUrl);
     wordChosen = word;
     renderBlanks(wordChosen);
+    loadingScreen.classList.add("hidden"); // Hide the loading screen
+    gameContainer.classList.remove("hidden"); // Show the game container
     document.addEventListener("keyup", gameRules);
     console.log(wordChosen);
     console.log(wordImage);
   } catch (error) {
     alert("Unable to connect");
+    loadingScreen.classList.add("hidden"); // Hide the loading screen in case of an error
+    gameContainer.classList.remove("hidden"); // Show the game container to allow further interaction
   }
 }
 
