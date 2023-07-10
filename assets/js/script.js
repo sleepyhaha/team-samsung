@@ -31,6 +31,11 @@ function init() {
 function game() {
   fetchWord();
   document.addEventListener("keyup", gameRules);
+}
+
+function endGame() {
+  gameContainer.setAttribute("class", "hidden");
+  endContainer.classList.remove("hidden");
   scoreForm.addEventListener("submit", function (event) {
     event.preventDefault();
     if (!submitButtonClicked) {
@@ -44,8 +49,8 @@ function game() {
 
 function gameRules(event) {
   loseWord.innerHTML = "";
-  let key = event.key.toLowerCase();
-  let alphabetNumericCharacters = "abcdefghijklmnopqrstuvwxyz0123456789 ".split(
+  let key = event.key;
+  let alphabetNumericCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ".split(
     ""
   );
   if (alphabetNumericCharacters.includes(key) && wordChosen != null) {
@@ -59,18 +64,21 @@ function gameRules(event) {
         }
       }
       wordBlank.textContent = blanksLetters.join(" ");
+      key = "";
     } else if (!lettersArray.includes(key)) {
       loseHeart++;
       let k = loseTotal - loseHeart;
       let hearts = document.querySelectorAll("#hearts");
       hearts[k].setAttribute("class", "fa-solid fa-heart-broken");
       loseWord.textContent = errorMsg;
+      key = "";
     }
     console.log(blanksLetters);
     console.log(winCounter);
     console.log(loseHeart);
     if (wordChosen === blanksLetters.join("")) {
       console.log(blanksLetters.join(""));
+      key = "";
       document.removeEventListener("keyup", gameRules);
       winCounter++;
       //loseHeart = 0;
@@ -78,9 +86,9 @@ function gameRules(event) {
       wordChosen = "";
       game();
     } else if (loseHeart === loseTotal) {
+      key = "";
       document.removeEventListener("keyup", gameRules);
-      gameContainer.setAttribute("class", "hidden");
-      endContainer.classList.remove("hidden");
+      endGame();
     }
   }
 }
@@ -91,7 +99,6 @@ async function fetchWord() {
     const data = await response.json();
     let ranWord = data[0];
     fetchImage(ranWord);
-    renderBlanks(ranWord);
     wordChosen = ranWord;
     console.log(wordChosen);
   } catch (error) {
@@ -114,6 +121,7 @@ async function fetchImage(word) {
     );
     const data = await response.json();
     wordImage.setAttribute("src", data.value[0].contentUrl);
+    renderBlanks(wordChosen);
     console.log(wordImage);
   } catch (error) {
     alert("Unable to connect");
@@ -132,7 +140,6 @@ function renderHearts() {
 }
 
 function renderBlanks(word) {
-  blanksLetters = []; // Clear the array before rendering new blanks
   let lettersInChosenWord = word.split("");
   let numBlanks = lettersInChosenWord.length;
   for (var i = 0; i < numBlanks; i++) {
