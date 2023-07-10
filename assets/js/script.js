@@ -17,7 +17,7 @@ let blanksLetters = [];
 let wordChosen = "";
 
 const apiUrl1 =
-  "https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=noun&excludePartOfSpeech=adjective&excludePartOfSpeech=given-name&minCorpusCount=120000&maxCorpusCount=-1&minDictionaryCount=3&maxDictionaryCount=-1&minLength=5&maxLength=12&api_key=x99v4shgrkxxd91g6q006nr6g774vt6rnwqwggt7ftc3dzq9n";
+  "https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=noun&excludePartOfSpeech=adjective&excludePartOfSpeech=given-name&minCorpusCount=110000&maxCorpusCount=-1&minDictionaryCount=2&maxDictionaryCount=-1&minLength=4&maxLength=12&api_key=x99v4shgrkxxd91g6q006nr6g774vt6rnwqwggt7ftc3dzq9n";
 const apiKey2 = "9bfc82b8092b4463a134c8f64e93c91a";
 const loseTotal = 10;
 const errorMsg = "Incorrect! Please try again.";
@@ -32,7 +32,6 @@ function init() {
 function game() {
   fetchWord();
 }
-
 
 function endGame() {
   gameContainer.setAttribute("class", "hidden");
@@ -51,9 +50,8 @@ function endGame() {
 function gameRules(event) {
   loseWord.innerHTML = "";
   let key = event.key;
-  let alphabetNumericCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ".split(
-    ""
-  );
+  let alphabetNumericCharacters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ".split("");
   if (alphabetNumericCharacters.includes(key) && wordChosen != null) {
     console.log(key);
     let lettersArray = wordChosen.split("");
@@ -97,7 +95,8 @@ async function fetchWord() {
   try {
     const response = await fetch(apiUrl1);
     const data = await response.json();
-    fetchImage(data.word);
+    const word = data.word.toLowerCase(); // Convert the word to lowercase
+    fetchImage(word);
   } catch (error) {
     alert("Unable to connect");
   }
