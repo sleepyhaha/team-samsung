@@ -1,9 +1,11 @@
 let wordBlank = document.querySelector("#word");
 let wordImage = document.querySelector("#image");
 let hIcon = document.querySelector("#life");
+
 let hintBtn1 = document.querySelector("#hint1");
 let hintBtn2 = document.querySelector("#hint2");
 let hintBtn3 = document.querySelector("#hint3");
+
 let loseWord = document.querySelector("#feedback");
 let startButton = document.querySelector("#start-btn");
 let startContainer = document.querySelector("#startText");
