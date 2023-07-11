@@ -1,7 +1,11 @@
 let wordBlank = document.querySelector("#word");
 let wordImage = document.querySelector("#image");
 let hIcon = document.querySelector("#life");
-let hintBtn = document.querySelector("#hint");
+
+let hintBtn1 = document.querySelector("#hint1");
+let hintBtn2 = document.querySelector("#hint2");
+let hintBtn3 = document.querySelector("#hint3");
+
 let loseWord = document.querySelector("#feedback");
 let startButton = document.querySelector("#start-btn");
 let startContainer = document.querySelector("#startText");
@@ -32,18 +36,28 @@ function init() {
   gameContainer.classList.remove("hidden");
   renderHearts();
   renderHints(hintNum);
-  console.log(hintNum);
   game();
 }
 
 function game() {
   fetchWord();
-  document.addEventListener("keyup", gameRules);
 }
 
-function endGame() {
-  gameContainer.setAttribute("class", "hidden");
-  endContainer.classList.remove("hidden");
+function winGame() {
+  if (wordChosen === blanksLetters.join("")) {
+    key = "";
+    document.removeEventListener("keyup", gameRules);
+    winCounter++;
+    hintCount++;
+    blanksLetters = [];
+    wordChosen = "";
+    if (hintCount == 5 && hintNum < 3) {
+      hintNum++;
+      hintCount = 0;
+      renderHints(hintNum);
+    }
+    setTimeout(game, 1000);
+  }
 }
 
 function endGame() {
@@ -69,7 +83,6 @@ function gameRules(event) {
   if (alphabetNumericCharacters.includes(key) && wordChosen != null) {
     console.log(key);
     let lettersArray = wordChosen.split("");
-    console.log(lettersArray);
     if (lettersArray.includes(key)) {
       for (var j = 0; j < lettersArray.length; j++) {
         if (lettersArray[j] === key) {
@@ -91,21 +104,8 @@ function gameRules(event) {
     console.log(blanksLetters);
     console.log(winCounter);
     console.log(loseHeart);
-    if (wordChosen === blanksLetters.join("")) {
-      console.log(blanksLetters.join(""));
-      key = "";
-      document.removeEventListener("keyup", gameRules);
-      winCounter++;
-      hintCount++;
-      blanksLetters = [];
-      wordChosen = "";
-      if (hintCount == 5 && hintNum < 3) {
-        hintNum++;
-        hintCount = 0;
-        renderHints(hintNum);
-      }
-      setTimeout(game, 1000);
-    } else if (loseHeart === loseTotal) {
+    winGame();
+    if (loseHeart === loseTotal) {
       key = "";
       document.removeEventListener("keyup", gameRules);
       endGame();
@@ -115,15 +115,21 @@ function gameRules(event) {
 
 function hint() {
   let lettersArray = wordChosen.split("");
-  let randLetter = Math.floor(Math.random() * lettersArray.length);
+  let randNum = 0;
+  do {
+    randNum = Math.floor(Math.random() * lettersArray.length);
+  } while (blanksLetters[randNum] != "_")
+  let randLetter = lettersArray[randNum];
   for (var i = 0; i < lettersArray.length; i++) {
-    if (lettersArray[j] === randLetter) {
-      blanksLetters[j] = randLetter;
+    if (lettersArray[i] === randLetter) {
+      blanksLetters[i] = randLetter;
     }
   }
+  wordBlank.textContent = blanksLetters.join(" ");
   hintNum = hintNum - 1;
   hintCount = 0;
   renderHints(hintNum);
+  winGame();
 }
 
 async function fetchWord() {
@@ -171,7 +177,9 @@ async function fetchImage(word) {
     loadingScreen.classList.add("hidden"); // Hide the loading screen
     gameContainer.classList.remove("hidden"); // Show the game container
     document.addEventListener("keyup", gameRules);
-    hintBtn.addEventListener("click", hint);
+    hintBtn1.addEventListener("click", hint);
+    hintBtn2.addEventListener("click", hint);
+    hintBtn3.addEventListener("click", hint);
     console.log(wordChosen);
     console.log(wordImage);
   } catch (error) {
@@ -193,10 +201,14 @@ function renderHearts() {
 }
 
 function renderHints(total) {
-  let hints = document.querySelectorAll("#hint");
+  let hints = document.querySelectorAll(".hint");
   for (var i = 0; i < total; i++) {
-    hints[i].setAttribute("class", "fa-solid fa-circle");
-    hints[i].setAttribute("diabled", false);
+    hints[i].setAttribute("class", "fa-solid fa-circle hint");
+    hints[i].disabled = false;
+  }
+  for (var i = total; i < 3; i++) {
+    hints[i].setAttribute("class", "fa-regular fa-circle hint");
+    hints[i].disabled = true;
   }
 }
 
