@@ -38,6 +38,12 @@ function init() {
 
 function game() {
   fetchWord();
+  document.addEventListener("keyup", gameRules);
+}
+
+function endGame() {
+  gameContainer.setAttribute("class", "hidden");
+  endContainer.classList.remove("hidden");
 }
 
 function endGame() {
@@ -57,8 +63,9 @@ function endGame() {
 function gameRules(event) {
   loseWord.innerHTML = "";
   let key = event.key;
-  let alphabetNumericCharacters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ".split("");
+  let alphabetNumericCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ".split(
+    ""
+  );
   if (alphabetNumericCharacters.includes(key) && wordChosen != null) {
     console.log(key);
     let lettersArray = wordChosen.split("");
@@ -71,6 +78,7 @@ function gameRules(event) {
       }
       key = "";
       wordBlank.textContent = blanksLetters.join(" ");
+      key = "";
     } else if (!lettersArray.includes(key)) {
       key = "";
       loseHeart++;
@@ -78,6 +86,7 @@ function gameRules(event) {
       let hearts = document.querySelectorAll("#hearts");
       hearts[k].setAttribute("class", "fa-solid fa-heart-broken");
       loseWord.textContent = errorMsg;
+      key = "";
     }
     console.log(blanksLetters);
     console.log(winCounter);
