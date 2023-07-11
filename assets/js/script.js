@@ -19,6 +19,7 @@ let loseHeart = 0;
 let blanksLetters = [];
 let wordChosen = "";
 let hintNum = 1;
+let hintCount = 0;
 
 const apiUrl1 =
   "https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=noun&excludePartOfSpeech=adjective&excludePartOfSpeech=given-name&minCorpusCount=110000&maxCorpusCount=-1&minDictionaryCount=2&maxDictionaryCount=-1&minLength=4&maxLength=12&api_key=x99v4shgrkxxd91g6q006nr6g774vt6rnwqwggt7ftc3dzq9n";
@@ -30,6 +31,8 @@ function init() {
   startContainer.setAttribute("class", "hidden");
   gameContainer.classList.remove("hidden");
   renderHearts();
+  renderHints(hintNum);
+  console.log(hintNum);
   game();
 }
 
@@ -84,10 +87,13 @@ function gameRules(event) {
       key = "";
       document.removeEventListener("keyup", gameRules);
       winCounter++;
+      hintCount++;
       blanksLetters = [];
       wordChosen = "";
-      if (hintNum < 3) {
+      if (hintCount == 5 && hintNum < 3) {
         hintNum++;
+        hintCount = 0;
+        renderHints(hintNum);
       }
       setTimeout(game, 1000);
     } else if (loseHeart === loseTotal) {
@@ -107,6 +113,7 @@ function hint() {
     }
   }
   hintNum = hintNum - 1;
+  hintCount = 0;
   renderHints(hintNum);
 }
 
@@ -156,7 +163,6 @@ async function fetchImage(word) {
     gameContainer.classList.remove("hidden"); // Show the game container
     document.addEventListener("keyup", gameRules);
     hintBtn.addEventListener("click", hint);
-    console.log(fetchStatus);
     console.log(wordChosen);
     console.log(wordImage);
   } catch (error) {
