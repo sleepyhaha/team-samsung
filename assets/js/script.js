@@ -77,9 +77,8 @@ function endGame() {
 function gameRules(event) {
   loseWord.innerHTML = "";
   let key = event.key;
-  let alphabetNumericCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ".split(
-    ""
-  );
+  let alphabetNumericCharacters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ".split("");
   if (alphabetNumericCharacters.includes(key) && wordChosen != null) {
     console.log(key);
     let lettersArray = wordChosen.split("");
@@ -118,7 +117,7 @@ function hint() {
   let randNum = 0;
   do {
     randNum = Math.floor(Math.random() * lettersArray.length);
-  } while (blanksLetters[randNum] != "_")
+  } while (blanksLetters[randNum] != "_");
   let randLetter = lettersArray[randNum];
   for (var i = 0; i < lettersArray.length; i++) {
     if (lettersArray[i] === randLetter) {
@@ -142,7 +141,7 @@ async function fetchWord() {
     const word = data.word.toLowerCase(); // Convert the word to lowercase
     fetchImage(word);
   } catch (error) {
-    alert("Unable to connect");
+    window.location.href = "error.html";
   }
 }
 
@@ -183,9 +182,11 @@ async function fetchImage(word) {
     console.log(wordChosen);
     console.log(wordImage);
   } catch (error) {
-    alert("Unable to connect");
-    loadingScreen.classList.add("hidden"); // Hide the loading screen in case of an error
-    gameContainer.classList.remove("hidden"); // Show the game container to allow further interaction
+    window.location.href = "error.html";
+
+    // commenting out below in case we want to change this error to something else
+    // loadingScreen.classList.add("hidden"); // Hide the loading screen in case of an error
+    // gameContainer.classList.remove("hidden"); // Show the game container to allow further interaction
   }
 }
 
