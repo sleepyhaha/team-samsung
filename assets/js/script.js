@@ -1,6 +1,7 @@
 let wordBlank = document.querySelector("#word");
 let wordImage = document.querySelector("#image");
 let hIcon = document.querySelector("#life");
+let hintBtn = document.querySelector('#hint');
 let loseWord = document.querySelector("#feedback");
 let startButton = document.querySelector("#start-btn");
 let startContainer = document.querySelector("#startText");
@@ -10,14 +11,18 @@ let submitButton = document.querySelector("#submit-btn");
 let playerName = document.querySelector("#name");
 let playerHighScore = document.querySelector("#score");
 let scoreForm = document.querySelector("#score-form");
+let loadingIcon = document.querySelector("#loading-icon");
+const loadingScreen = document.querySelector("#loading-screen");
 
 let winCounter = 0;
 let loseHeart = 0;
 let blanksLetters = [];
 let wordChosen = "";
+let hintNum = 1;
+let hintCount = 0;
 
 const apiUrl1 =
-  "https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=noun&excludePartOfSpeech=adjective&excludePartOfSpeech=given-name&minCorpusCount=120000&maxCorpusCount=-1&minDictionaryCount=3&maxDictionaryCount=-1&minLength=5&maxLength=12&api_key=x99v4shgrkxxd91g6q006nr6g774vt6rnwqwggt7ftc3dzq9n";
+  "https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=noun&excludePartOfSpeech=adjective&excludePartOfSpeech=given-name&minCorpusCount=110000&maxCorpusCount=-1&minDictionaryCount=2&maxDictionaryCount=-1&minLength=4&maxLength=12&api_key=x99v4shgrkxxd91g6q006nr6g774vt6rnwqwggt7ftc3dzq9n";
 const apiKey2 = "9bfc82b8092b4463a134c8f64e93c91a";
 const loseTotal = 10;
 const errorMsg = "Incorrect! Please try again.";
@@ -26,12 +31,19 @@ function init() {
   startContainer.setAttribute("class", "hidden");
   gameContainer.classList.remove("hidden");
   renderHearts();
+  renderHints(hintNum);
+  console.log(hintNum);
   game();
 }
 
 function game() {
   fetchWord();
   document.addEventListener("keyup", gameRules);
+}
+
+function endGame() {
+  gameContainer.setAttribute("class", "hidden");
+  endContainer.classList.remove("hidden");
 }
 
 function endGame() {
@@ -64,9 +76,11 @@ function gameRules(event) {
           blanksLetters[j] = key;
         }
       }
+      key = "";
       wordBlank.textContent = blanksLetters.join(" ");
       key = "";
     } else if (!lettersArray.includes(key)) {
+      key = "";
       loseHeart++;
       let k = loseTotal - loseHeart;
       let hearts = document.querySelectorAll("#hearts");
@@ -82,10 +96,15 @@ function gameRules(event) {
       key = "";
       document.removeEventListener("keyup", gameRules);
       winCounter++;
-      //loseHeart = 0;
+      hintCount++;
       blanksLetters = [];
       wordChosen = "";
-      game();
+      if (hintCount == 5 && hintNum <3) {
+        hintNum ++; 
+        hintCount = 0;
+        renderHints(hintNum);
+      } 
+      setTimeout(game, 1000);
     } else if (loseHeart === loseTotal) {
       key = "";
       document.removeEventListener("keyup", gameRules);
@@ -94,14 +113,28 @@ function gameRules(event) {
   }
 }
 
+function hint() {
+  let lettersArray = wordChosen.split("");
+  let randLetter = Math.floor(Math.random() * lettersArray.length);
+  for (var i = 0; i < lettersArray.length; i++) {
+    if (lettersArray[j] === randLetter) {
+      blanksLetters[j] = randLetter;
+    }
+  }
+  hintNum = hintNum - 1;
+  hintCount = 0;
+  renderHints(hintNum);
+}
+
 async function fetchWord() {
   try {
+    gameContainer.classList.add("hidden"); // Hide the game container
+    loadingScreen.classList.remove("hidden"); // Show the loading screen
+
     const response = await fetch(apiUrl1);
     const data = await response.json();
-    let ranWord = data.word;
-    fetchImage(ranWord);
-    wordChosen = ranWord;
-    console.log(wordChosen);
+    const word = data.word.toLowerCase(); // Convert the word to lowercase
+    fetchImage(word);
   } catch (error) {
     alert("Unable to connect");
   }
@@ -121,11 +154,30 @@ async function fetchImage(word) {
       }
     );
     const data = await response.json();
-    wordImage.setAttribute("src", data.value[0].contentUrl);
+    const imageUrl = data.value[0].contentUrl;
+
+    // Preload the image
+    const preloadedImage = new Image();
+    preloadedImage.src = imageUrl;
+
+    loadingScreen.classList.remove("hidden"); // Show the loading screen
+
+    // Delay for 3 seconds before loading the image and word
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    wordImage.setAttribute("src", imageUrl);
+    wordChosen = word;
     renderBlanks(wordChosen);
+    loadingScreen.classList.add("hidden"); // Hide the loading screen
+    gameContainer.classList.remove("hidden"); // Show the game container
+    document.addEventListener("keyup", gameRules);
+    hintBtn.addEventListener("click", hint);
+    console.log(wordChosen);
     console.log(wordImage);
   } catch (error) {
     alert("Unable to connect");
+    loadingScreen.classList.add("hidden"); // Hide the loading screen in case of an error
+    gameContainer.classList.remove("hidden"); // Show the game container to allow further interaction
   }
 }
 
@@ -137,6 +189,14 @@ function renderHearts() {
     hearts.setAttribute("class", "fa-solid fa-heart");
     hearts.style.color = "#FF0000";
     hIcon.appendChild(hearts);
+  }
+}
+
+function renderHints (total) {
+  let hints = document.querySelectorAll("#hint");
+  for (var i = 0; i < total; i++) {
+    hints[i].setAttribute("class", "fa-solid fa-circle");
+    hints[i].setAttribute("diabled", false);
   }
 }
 

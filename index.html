@@ -30,16 +30,19 @@
     <nav class="px-5">
         <div class="flex justify-between items-center text-2xl p-5 font-semibold">
             <h1><a href="highscores.html">Highscores</a></h1>
+            <h1>Hint: <span><button id="hint" class="fa-regular fa-circle"></button> <button id="hint" class="fa-regular fa-circle"></button> <button id="hint"
+                        class="fa-regular fa-circle"></button></span></h1>
             <h1 id="life">Life: <span id="hearts"></span></h1>
         </div>
     </nav>
     <div id="startText" class=""> <!-- Starting text -->
-        <div class="start flex text-center justify-center flex-col flex-wrap mt-60 leading-normal" id="start-text">
+        <div class="start flex text-center justify-center flex-col mt-60 items-center" id="start-text">
             <h1 class="text-3xl font-bold mb-5">PictoHang</h1>
             <p class="text-xl"> Try to guess the word related to the image!</p>
             <p class="text-xl">Keep in mind that guessing the incorrect
                 letter will
                 penalize you!</p>
+
         </div>
         <div class="flex justify-center">
             <button id="start-btn"
@@ -64,6 +67,12 @@
             <div id="word" class="mt-10 text-3xl"></div>
             <p id="feedback" class="mt-10 text-2xl"></p>
         </div>
+    </div>
+    <div id="loading-screen" class="hidden"> <!-- Loading screen -->
+        <div class="flex justify-center mt-72">
+            <i id="loading-icon" class="fa-solid fa-spinner fa-spin fa-2xl"></i>
+        </div>
+
     </div>
     <div id="endGame" class="hidden"> <!-- End screen -->
         <div class="flex justify-center flex-col items-center mt-60">
