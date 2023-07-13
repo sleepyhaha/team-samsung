@@ -80,7 +80,7 @@ function gameRules(event) {
   let alphabetNumericCharacters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ".split("");
   if (alphabetNumericCharacters.includes(key) && wordChosen != null) {
-    console.log(key);
+    // console.log(key);
     let lettersArray = wordChosen.split("");
     if (lettersArray.includes(key)) {
       for (var j = 0; j < lettersArray.length; j++) {
@@ -90,7 +90,6 @@ function gameRules(event) {
       }
       key = "";
       wordBlank.textContent = blanksLetters.join(" ");
-      key = "";
     } else if (!lettersArray.includes(key)) {
       key = "";
       loseHeart++;
@@ -100,9 +99,9 @@ function gameRules(event) {
       loseWord.textContent = errorMsg;
       key = "";
     }
-    console.log(blanksLetters);
-    console.log(winCounter);
-    console.log(loseHeart);
+    // console.log(blanksLetters);
+    // console.log(winCounter);
+    // console.log(loseHeart);
     winGame();
     if (loseHeart === loseTotal) {
       key = "";
