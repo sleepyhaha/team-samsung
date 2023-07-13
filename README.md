@@ -88,6 +88,12 @@ When I choose to play again,
 Then the game should reset,  
 And the steps from Scenario 1 to Scenario 9 should be repeated with a new target word and image.
 
+### Scenario 11: Hint button
+
+Given that I am stuck on a word
+When I press the hint button
+Then an unguessed letter should appear in the word
+
 # Installation
 
 To view the final outcome, you can either:
