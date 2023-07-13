@@ -26,8 +26,8 @@ let hintNum = 1;
 let hintCount = 0;
 
 const apiUrl1 =
-  "https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=noun&excludePartOfSpeech=adjective&excludePartOfSpeech=given-name&minCorpusCount=110000&maxCorpusCount=-1&minDictionaryCount=2&maxDictionaryCount=-1&minLength=4&maxLength=12&api_key=x99v4shgrkxxd91g6q006nr6g774vt6rnwqwggt7ftc3dzq9n";
-const apiKey2 = "9bfc82b8092b4463a134c8f64e93c91a";
+  "https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=noun&excludePartOfSpeech=given-name&minCorpusCount=110000&maxCorpusCount=-1&minDictionaryCount=4&maxDictionaryCount=-1&minLength=4&maxLength=12&api_key=x99v4shgrkxxd91g6q006nr6g774vt6rnwqwggt7ftc3dzq9n";
+const pixabayApiKey = "38194665-409e2f071e73921d6039f474b";
 const loseTotal = 10;
 const errorMsg = "Incorrect! Please try again.";
 
@@ -149,38 +149,40 @@ async function fetchImage(word) {
   try {
     const searchTerm = word; // Use the randomly generated word as the search term
     const response = await fetch(
-      `https://api.bing.microsoft.com/v7.0/images/search?q=${encodeURIComponent(
-        searchTerm
-      )}`,
-      {
-        headers: {
-          "Ocp-Apim-Subscription-Key": apiKey2,
-        },
-      }
+      "https://pixabay.com/api/?key=" +
+        pixabayApiKey +
+        "&q=" +
+        encodeURIComponent(searchTerm) +
+        "&image_type=all"
     );
     const data = await response.json();
-    const imageUrl = data.value[0].contentUrl;
 
-    // Preload the image
-    const preloadedImage = new Image();
-    preloadedImage.src = imageUrl;
+    if (data.hits.length > 0) {
+      const imageUrl = data.hits[0].webformatURL;
 
-    loadingScreen.classList.remove("hidden"); // Show the loading screen
+      // Preload the image
+      const preloadedImage = new Image();
+      preloadedImage.src = imageUrl;
 
-    // Delay for 3 seconds before loading the image and word
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+      loadingScreen.classList.remove("hidden"); // Show the loading screen
 
-    wordImage.setAttribute("src", imageUrl);
-    wordChosen = word;
-    renderBlanks(wordChosen);
-    loadingScreen.classList.add("hidden"); // Hide the loading screen
-    gameContainer.classList.remove("hidden"); // Show the game container
-    document.addEventListener("keyup", gameRules);
-    hintBtn1.addEventListener("click", hint);
-    hintBtn2.addEventListener("click", hint);
-    hintBtn3.addEventListener("click", hint);
-    console.log(wordChosen);
-    console.log(wordImage);
+      // Delay for 3 seconds before loading the image and word
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      wordImage.setAttribute("src", imageUrl);
+      wordChosen = word;
+      renderBlanks(wordChosen);
+      loadingScreen.classList.add("hidden"); // Hide the loading screen
+      gameContainer.classList.remove("hidden"); // Show the game container
+      document.addEventListener("keyup", gameRules);
+      hintBtn1.addEventListener("click", hint);
+      hintBtn2.addEventListener("click", hint);
+      hintBtn3.addEventListener("click", hint);
+      console.log(wordChosen);
+      console.log(wordImage);
+    } else {
+      throw new Error("No images found");
+    }
   } catch (error) {
     window.location.href = "error.html";
 
