@@ -31,6 +31,14 @@ const pixabayApiKey = "38194665-409e2f071e73921d6039f474b";
 const loseTotal = 10;
 const errorMsg = "Incorrect! Please try again.";
 
+const loadingIcons = [
+  "fa-solid fa-fire fa-flip fa-2xl",
+  "fa-solid fa-poo fa-beat fa-2xl",
+  "fa-solid fa-ghost fa-beat-fade fa-2xl",
+  "fa-solid fa-hippo fa-bounce fa-2xl",
+  "fa-solid fa-spinner fa-spin fa-2xl",
+];
+
 function init() {
   startContainer.setAttribute("class", "hidden");
   gameContainer.classList.remove("hidden");
@@ -133,7 +141,7 @@ function hint() {
 async function fetchWord() {
   try {
     gameContainer.classList.add("hidden"); // Hide the game container
-    loadingScreen.classList.remove("hidden"); // Show the loading screen
+    displayLoadingScreen(); // Show the loading screen
 
     const response = await fetch(apiUrl1);
     const data = await response.json();
@@ -163,15 +171,13 @@ async function fetchImage(word) {
       const preloadedImage = new Image();
       preloadedImage.src = imageUrl;
 
-      loadingScreen.classList.remove("hidden"); // Show the loading screen
-
       // Delay for 3 seconds before loading the image and word
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       wordImage.setAttribute("src", imageUrl);
       wordChosen = word;
       renderBlanks(wordChosen);
-      loadingScreen.classList.add("hidden"); // Hide the loading screen
+      hideLoadingScreen(); // Hide the loading screen
       gameContainer.classList.remove("hidden"); // Show the game container
       document.addEventListener("keyup", gameRules);
       hintBtn1.addEventListener("click", hint);
@@ -256,5 +262,22 @@ hardModeCheckbox.addEventListener("change", function () {
     image.classList.remove("blur");
   }
 });
+
+function displayLoadingScreen() {
+  // Select a random loading icon class from the list
+  let randomIconClass =
+    loadingIcons[Math.floor(Math.random() * loadingIcons.length)];
+
+  // Set the class attribute of the loading icon element
+  loadingIcon.setAttribute("class", randomIconClass);
+
+  // Show the loading screen
+  loadingScreen.classList.remove("hidden");
+}
+
+function hideLoadingScreen() {
+  // Hide the loading screen
+  loadingScreen.classList.add("hidden");
+}
 
 startButton.addEventListener("click", init);
