@@ -2,6 +2,14 @@
 
 # PictoHang
 
+## Description
+
+Our application is a "fun" cross between Pictionary and Hangman. Words are randomly pulled from an API, and then used in an image search API to pull a photo with that word. The user then has to guess the word based on the picture.
+
+The user starts with 1 hint, and gains another for ever 5 correct up to a maximum of 3. The user also starts with 10 health. Every incorrect answer decrements their health total by 1.
+
+The game is over once the users health reaches 0.
+
 ## User Story
 
 As a player,
