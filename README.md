@@ -10,6 +10,10 @@ The user starts with 1 hint, and gains another for ever 5 correct up to a maximu
 
 The game is over once the users health reaches 0.
 
+![start-screen](/assets/img/startscreen.png)
+
+![game-screen](/assets/img/gamescreen.png)
+
 ## User Story
 
 As a player,
@@ -83,3 +87,22 @@ Given that I have finished a game,
 When I choose to play again,  
 Then the game should reset,  
 And the steps from Scenario 1 to Scenario 9 should be repeated with a new target word and image.
+
+### Scenario 11: Hint button
+
+Given that I am stuck on a word
+When I press the hint button
+Then an unguessed letter should appear in the word
+
+# Installation
+
+To view the final outcome, you can either:
+
+- Head to the GitHub pages link, or;
+- Clone the repository to your local environment.
+
+The Github Pages link is: https://sleepyhaha.github.io/team-samsung/
+
+Otherwise, clone the repo to your local environment using the following SSH key: git@github.com:sleepyhaha/team-samsung.git
+
+The link to the Github repo is: https://github.com/sleepyhaha/team-samsung
